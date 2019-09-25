@@ -9,19 +9,18 @@
 import Foundation
 
 extension ANSICode {
-	private static func makePoint(geometry: PointRepresentable, symbol: String) -> String {
+	private static func makePoint(geometry: PointRepresentable) -> String {
 		var point = ANSICode.cursor.move(row:geometry.y, col: geometry.x)
-		point += symbol
+		point += "🤩"
 		return point
 	}
 	
 	static func makeFigure(
-		displayable: Displayable,
-		symbols: [String]) -> String {
+		points: [PointRepresentable]) -> String {
 		
 		var result = ""
-		for (index, point) in displayable.points.enumerated() {
-			result += makePoint(geometry: point, symbol: symbols[index])
+		for point in points {
+			result += makePoint(geometry: point)
 		}
 		return result
 	}

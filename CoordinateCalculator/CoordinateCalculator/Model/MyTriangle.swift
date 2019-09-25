@@ -8,15 +8,7 @@
 
 import Foundation
 
-protocol TriangleRepresentable: Displayable {
-	var pointA: PointRepresentable { get }
-	var pointB: PointRepresentable { get }
-	var pointC: PointRepresentable { get }
-	
-	var area: Double { get }
-}
-
-struct MyTriangle: TriangleRepresentable, Equatable {
+struct MyTriangle: Equatable {
 	static func == (lhs: MyTriangle, rhs: MyTriangle) -> Bool {
 		return lhs.pointA.hash == rhs.pointA.hash
 			&& lhs.pointB.hash == rhs.pointB.hash
@@ -27,34 +19,41 @@ struct MyTriangle: TriangleRepresentable, Equatable {
 	var pointB: PointRepresentable
 	var pointC: PointRepresentable
 	
-	var area: Double {
-		return lineA.distance * lineC.distance * sinB / 2
-	}
 	var points: [PointRepresentable] {
 		return [pointA, pointB, pointC]
 	}
 }
 
 extension MyTriangle {
-	private var lineA: LineRepresentable {
-		return MyLine(pointA: pointA, pointB: pointB)
-	}
-	private var lineB: LineRepresentable {
-		return MyLine(pointA: pointB, pointB: pointC)
-	}
-	private var lineC: LineRepresentable {
-		return MyLine(pointA: pointC, pointB: pointA)
-	}
-	
+    private var lineADistance: Double {
+        return Double.distance(pointA: pointA, pointB: pointB)
+    }
+    private var lineBDistance: Double {
+        return Double.distance(pointA: pointB, pointB: pointC)
+    }
+    private var lineCDistance: Double {
+        return Double.distance(pointA: pointC, pointB: pointA)
+    }
+
 	private var cosB: Double {
-		let top = lineA.distance * lineA.distance
-			+ lineC.distance * lineC.distance
-			- lineB.distance * lineB.distance
-		let bottom = 2 * lineA.distance * lineC.distance
+		let top = lineADistance * lineADistance
+			+ lineCDistance * lineCDistance
+			- lineBDistance * lineBDistance
+		let bottom = 2 * lineADistance * lineCDistance
 		return top / bottom
 	}
 	
 	private var sinB: Double {
 		return (1 - cosB * cosB).squareRoot()
 	}
+}
+
+extension MyTriangle: Displayable {
+    private var area: Double {
+        return lineADistance * lineCDistance * sinB / 2
+    }
+
+    var message: String {
+        return "삼각형 넓이는 \(area)"
+    }
 }

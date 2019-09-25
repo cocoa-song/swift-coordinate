@@ -8,14 +8,7 @@
 
 import Foundation
 
-protocol LineRepresentable: Displayable {
-	var pointA: PointRepresentable { get }
-	var pointB: PointRepresentable { get }
-	var points: [PointRepresentable] { get }
-	var distance: Double { get }
-}
-
-struct MyLine: LineRepresentable, Equatable {
+struct MyLine: Equatable {
 	static func == (lhs: MyLine, rhs: MyLine) -> Bool {
 		return lhs.pointA.hash == rhs.pointA.hash
 			&& lhs.pointB.hash == rhs.pointB.hash
@@ -23,22 +16,25 @@ struct MyLine: LineRepresentable, Equatable {
 	let pointA: PointRepresentable
 	let pointB: PointRepresentable
 	
-	var distance: Double {
-		let xDistance = Double(pointA.x - pointB.x)
-		let yDistance = Double(pointA.y - pointB.y)
-		return (xDistance * xDistance + yDistance * yDistance).squareRoot()
-	}
-	
+    static var empty: MyLine {
+        MyLine(pointA: MyPoint.empty, pointB: MyPoint.empty)
+    }
+
 }
+
 
 extension MyLine: Displayable {
+    private var distance: Double {
+        let xDistance = Double(pointA.x - pointB.x)
+        let yDistance = Double(pointA.y - pointB.y)
+        return (xDistance * xDistance + yDistance * yDistance).squareRoot()
+    }
+
+    var message: String {
+        return "두 점 사이의 거리는 \(distance)"
+    }
+    
 	var points: [PointRepresentable] {
 		return [pointA, pointB]
-	}
-}
-
-extension MyLine {
-	static var empty: MyLine {
-		MyLine(pointA: MyPoint.empty, pointB: MyPoint.empty)
 	}
 }

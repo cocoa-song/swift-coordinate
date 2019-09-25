@@ -21,4 +21,10 @@ extension String {
 			String(self[Range($0.range, in: self)!])
 		}
 	}
+    
+    var numbers: [Int] {
+        return self.matches(regex: #"(\d+)"#)
+            .compactMap { Int($0) }
+            .filter { $0 < 25 && $0 > 0 }
+    }
 }

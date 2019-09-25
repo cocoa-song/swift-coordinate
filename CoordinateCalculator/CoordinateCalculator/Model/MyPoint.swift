@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol PointRepresentable: Displayable {
+protocol PointRepresentable {
 	var x: Int { get }
 	var y: Int { get }
 }
@@ -17,6 +17,12 @@ extension PointRepresentable {
 	var hash: Int {
 		return x.hashValue * y.hashValue
 	}
+    var transformed: PointRepresentable {
+        let newY = 25 - self.y
+        let newX = 3 + self.x * 2
+        return MyPoint(x: newX, y: newY)
+    }
+
 }
 
 struct MyPoint: PointRepresentable {
@@ -27,10 +33,11 @@ struct MyPoint: PointRepresentable {
 		self.x = x
 		self.y = y
 	}
-	
-	var points: [PointRepresentable] {
-		return [self]
-	}
+	    
+    static var empty: PointRepresentable {
+        return MyPoint(x: 0, y: 0)
+    }
+
 }
 
 extension MyPoint: Comparable {
@@ -39,8 +46,13 @@ extension MyPoint: Comparable {
 	}
 }
 
-extension MyPoint {
-	static var empty: PointRepresentable {
-		return MyPoint(x: 0, y: 0)
-	}
+
+extension MyPoint: Displayable {
+    var points: [PointRepresentable] {
+        return [self]
+    }
+
+    var message: String {
+        return ""
+    }
 }

@@ -10,39 +10,22 @@ import Foundation
 
 protocol Displayable {
 	var points: [PointRepresentable] { get }
+    var message: String { get }
 }
 
 struct OutputView {
 	static func display(_ displayable: Displayable) {
-		switch displayable {
-		case let point as PointRepresentable:
-			let pointANSI = ANSICode.makeFigure(
-				displayable: point,
-				symbols: ["😈"]
-			)
-			display(with: pointANSI)
-		case let line as LineRepresentable:
-			let lineANSI = ANSICode.makeFigure(
-				displayable: line,
-				symbols: ["😈", "👻"]
-			)
-			display(with: lineANSI)
-			print("두 점 사이의 거리는 \(line.distance)")
-		case let triangle as TriangleRepresentable:
-			let triangleANSI = ANSICode.makeFigure(
-				displayable: triangle,
-				symbols: ["😈", "👻", "🤑"]
-			)
-			display(with: triangleANSI)
-			print("삼각형 넓이는 \(triangle.area)")
-		default:
-			fatalError()
-		}
+        display(figure: ANSICode.makeFigure(points: displayable.points))
+        display(message: displayable.message)
 	}
 	
-	private static func display(with string: String) {
+	private static func display(figure: String) {
 		print("\(ANSICode.clear)\(ANSICode.home)")
-		print(string)
+		print(figure)
 		print("\(ANSICode.text.white)\(ANSICode.axis.draw())")
 	}
+    
+    private static func display(message: String) {
+        print(message)
+    }
 }
